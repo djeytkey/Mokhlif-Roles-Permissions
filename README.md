@@ -19,6 +19,8 @@ This package is designed to work alongside your existing User model and controll
 
 ### Adding Role Functionality to Your User Model
 
+**Important**: You need to manually add the `HasRoles` trait to your existing User model. The package will not automatically do this.
+
 Add the `HasRoles` trait to your existing User model:
 
 ```php
@@ -61,13 +63,33 @@ The package provides additional controllers for role management, but you can con
 composer require boukjijtarik/woorolemanager
 ```
 
-### 2. Publish Configuration
+### 2. Add the HasRoles Trait to Your User Model
+
+**This step is required!** Add the trait to your existing User model:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use BoukjijTarik\WooRoleManager\Traits\HasRoles;
+
+class User extends Authenticatable
+{
+    use HasRoles;
+
+    // Your existing User model code...
+}
+```
+
+### 3. Publish Configuration
 
 ```bash
 php artisan vendor:publish --tag=woorolemanager-config
 ```
 
-### 3. Configure Database Connection
+### 4. Configure Database Connection
 
 Add your WooCommerce database connection to `config/database.php`:
 
@@ -96,7 +118,7 @@ Add your WooCommerce database connection to `config/database.php`:
 ],
 ```
 
-### 4. Add Environment Variables
+### 5. Add Environment Variables
 
 Add these to your `.env` file:
 
@@ -112,13 +134,13 @@ WOOCOMMERCE_GUARD=web
 WOOCOMMERCE_ROUTE_PREFIX=admin/woorolemanager
 ```
 
-### 5. Run Migrations
+### 6. Run Migrations
 
 ```bash
 php artisan migrate
 ```
 
-### 6. Sync Default Roles and Permissions
+### 7. Sync Default Roles and Permissions
 
 ```bash
 php artisan roles:sync
@@ -275,6 +297,19 @@ The package configuration is located at `config/woorolemanager.php`. Key options
 - `route_prefix`: Route prefix for package routes
 - `default_roles`: Array of default roles to create
 - `default_permissions`: Array of default permissions to create
+
+## Troubleshooting
+
+### "Cannot instantiate trait" Error
+
+If you get this error, make sure you have manually added the `HasRoles` trait to your User model as shown in the installation instructions above.
+
+### Role Methods Not Available
+
+If role methods like `hasRole()` are not available on your User model, ensure you have:
+
+1. Added the `use HasRoles;` statement to your User model
+2. Imported the trait: `use BoukjijTarik\WooRoleManager\Traits\HasRoles;`
 
 ## Security
 

@@ -73,9 +73,6 @@ class WooRoleManagerServiceProvider extends ServiceProvider
 
         // Register Gates
         $this->registerGates();
-
-        // Extend existing User model with role functionality
-        $this->extendUserModel();
     }
 
     /**
@@ -126,19 +123,5 @@ class WooRoleManagerServiceProvider extends ServiceProvider
         Gate::define('manage-inventory', function ($user) {
             return $user->hasAnyRole(['admin', 'warehouse_manager', 'warehouse_agent']);
         });
-    }
-
-    /**
-     * Extend the existing User model with role functionality.
-     */
-    protected function extendUserModel(): void
-    {
-        // Get the User model class from config or use default
-        $userModelClass = config('auth.providers.users.model', \App\Models\User::class);
-        
-        if (class_exists($userModelClass)) {
-            // Add role methods to the existing User model using a trait
-            $userModelClass::mixin(new \BoukjijTarik\WooRoleManager\Traits\HasRoles);
-        }
     }
 } 
